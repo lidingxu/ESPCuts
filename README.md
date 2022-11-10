@@ -18,8 +18,8 @@ This will procude a binary executable called `misp`.
 In `setting` directory, there are four SCIP's setting files:
 * `default.set`: SCIP's default setting with time limit set to 3600 CPU seconds and node limit set to 1;
 * `icuts.set`: intersection cuts are enabled;
-* `lcpcuts.set`: supermodular outer approximation cuts are enabled;
-* `supcuts.set`: projected outer approximation cuts are enabled.
+* `lcpcuts.set`: projected outer approximation cuts are enabled.;
+* `supcuts.set`: supermodular outer approximation cuts are enabled.
 
 Modify a setting file to obtain desired parameter setting, e.g., change node limit to enable a full branch-and-bound experiment.
 
