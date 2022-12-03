@@ -57,13 +57,3 @@ optimize
 
 If you find our codes useful in your work, we kindly request that you cite the following paper draft, which is recommended reading for advanced users:
 
-    @article{xubranch,
-            author = {Xu, Liding and Haddad Vanier, Sonia},
-            title = {Branch-and-price for energy optimization in multi-hop wireless sensor networks},
-            journal = {Networks},
-            volume = {80},
-            number = {1},
-            pages = {123-148},
-            doi = {https://doi.org/10.1002/net.22083},
-            year = {2022}
-    }
