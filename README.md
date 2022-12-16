@@ -24,7 +24,7 @@ In `setting` directory, there are four SCIP's setting files:
 Modify a setting file to obtain desired parameter setting, e.g., change node limit to enable a full branch-and-bound experiment.
 
 ## Benchmark and Test
-In `benchmark` directory, there are two subdirectories `Continuous` and `Discrete` of [MINLPLib](https://www.minlplib.org/) instances. `Continuous` contains MINLP instances with signomial terms, and `Discrete` contains MINLP instances with signomial terms.
+In `benchmark` directory, there are two subdirectories `Continuous` and `Discrete` of [MINLPLib](https://www.minlplib.org/) instances. `Continuous` contains NLP instances with signomial terms, and `Discrete` contains MINLP instances with signomial terms.
 
 Run the bash script `runtest.sh` to reproduce all computational results in the draft paper:
 ```
