@@ -1,8 +1,0 @@
-separating/sepa_signomial/freq = 1
-separating/sepa_signomial/inter_cut = FALSE
-separating/sepa_signomial/outer_cut = 2
-limits/gap = 1e-4
-limits/absgap = 1e-6
-limits/nodes = 1
-limits/time = 3600
-timing/clocktype = 1

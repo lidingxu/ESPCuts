@@ -15,9 +15,6 @@ df = pd.read_csv('instancedata.csv', sep=';')
 
 
 
-
-
-
 def Stat(name):
     return {"name": name, "problem_type": ProblemType.Continuous}
 
@@ -46,6 +43,7 @@ for row_ind in range(len(df)):
     discrete_var = row["probtype"] in ["MBNLP", "MINLP", "BNLP", "INLP"]
     has_sigfunc = row["npolynomfunc"] > 0 or row["nsignomfunc"] > 0
     has_primal = not pd.isna(row["primalbound"])
+    print(row["primalbound"], " ", row["dualbound"])
     if continous_var and has_sigfunc and has_primal:
         #print(row["nsignomfunc"], row["probtype"], "continuous")
         continuous_benchmark.append(row_stat)

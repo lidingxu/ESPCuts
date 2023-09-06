@@ -7,383 +7,221 @@ import numpy as np
 import math 
 import matplotlib.pyplot as plt
 
-class ProblemType(Enum):
-    Discrete = 0
-    Continuous = 1
-
-
 
 df = pd.read_csv('data/instancedata.csv', sep=';')
 
-osil_dir_path = os.getcwd() + "/data/osil"
-continuous_dir_path = os.getcwd() + "/data/Continuous"
-discrete_dir_path = os.getcwd() + "/data/Discrete"
-
-continuous_log_path = os.getcwd() + "/logs/Continuous"
-discrete_log_path = os.getcwd() + "/logs/Discrete"
-
-
-
-def extract_scip(entry_, file_path):
-    ls = open(file_path).readlines()
-    #print(ls)
-    #print(file)
-    stat_keys = ["Total Time",  "Gap", "Dual Bound", "First LP value", "sepa_signomial", "solving"]
-    stat_dict = {}
-    entry = entry_
-    for l in ls:
-        for stat_key in stat_keys:
-            if  l.split(":")[0].strip() == stat_key:
-                stat_dict[stat_key] = l
-    #print(stat_dict["Dual Bound"].split()[2])
-    if "Total Time" not in stat_dict  or "First LP value" not in stat_dict:
-        entry["total_time"] = float("NAN")
-        entry["dualbound"] = float("NAN")
-        entry["FirstLP"] = float("NAN")
-        entry["noLP"] = True
-        entry["affected"] = False
-        entry["epa_signomial"] = 0
-        return entry
-    entry["total_time"] = float(stat_dict["Total Time"].split()[3])
-    #print(entry["instance"])
-    #print(stat_dict["sepa_signomial"].split())
-    #entry["primal_bound"] = float(stat_dict["Primal Bound"].split()[3])
-    entry["dualbound"] = float("NAN") if stat_dict["Dual Bound"].split()[3] == "-" else float(stat_dict["Dual Bound"].split()[3])
-    entry["noLP"] = True if stat_dict["First LP value"].split()[4] == "-" else False
-    entry["FirstLP"] =   float("NAN")  if stat_dict["First LP value"].split()[4] == "-" else float(stat_dict["First LP value"].split()[4])
-    entry["affected"] =   int(stat_dict["sepa_signomial"].split()[7]) > 0 
-    entry["ncuts"] =  int(stat_dict["sepa_signomial"].split()[7]) 
-    entry["solving"] = float(stat_dict["solving"].split()[2])
-    entry["rel_gap"] = float(float("NAN") if stat_dict["Gap"].split()[2] == "infinite" else stat_dict["Gap"].split()[2]) #float(stat_dict["Gap"].split()[2])
-    return entry
-
-
-
-
-
-discrete_set=[]
-continuous_set=[]
-discrete_df = pd.DataFrame()
-continuous_df = pd.DataFrame()
-discrete_rows = []
-continuous_rows  = []
+prb_rows = {}
 ct_total = 0
-ct_d = 0
-ct_c = 0
 for row_ind in range(len(df)):
     row = df.iloc[row_ind]
 
     if row["convex"] == True:
         continue
 
-    #print("null", row["primalbound"])
-    continous_var = row["probtype"] in ["NLP"]
-    discrete_var = row["probtype"] in ["MBNLP", "MINLP", "BNLP", "INLP"]
     has_sigfunc = row["npolynomfunc"] > 0 or row["nsignomfunc"] > 0
     has_primal = not pd.isna(row["primalbound"])
-    if continous_var and has_sigfunc and has_primal:
-        #print(row["nsignomfunc"], row["probtype"], "continuous")
-        continuous_df = continuous_df.append(row)
-        continuous_set.append(row["name"])
-        continuous_rows.append(row)
+    if has_sigfunc and has_primal:
+        prb_rows[row["name"]] = row
         ct_total += 1
-        ct_c += 1
-    elif discrete_var and has_sigfunc and has_primal:
-        #print(row["nsignomfunc"], row["probtype"], "discrete")
-        discrete_df = discrete_df.append(row)
-        discrete_set.append(row["name"])
-        discrete_rows.append(row)
-        ct_total += 1
-        ct_d += 1
+
+
+MAXTIME = 3600.00
+def extract_scip(entry_, file_path):
+    ls = open(file_path).readlines()
+    stat_keys = ["Total Time",  "Gap", "nodes (total)", "signomial", "Primal Bound", "Dual Bound"]
+    stat_dict = {}
+    entry = entry_
+    for l in ls:
+        for stat_key in stat_keys:
+            if  l.split(":")[0].strip() == stat_key:
+                stat_dict[stat_key] = l
+    if "Total Time" not in stat_dict:
+        entry["total_time"] = float("NAN")
+        entry["gap"] = float("NAN")
+        entry["nodes"] = float("NAN")
+        return entry
+    entry["total_time"] = min(MAXTIME, float(stat_dict["Total Time"].split()[3]))
+    entry["nodes"] = float(stat_dict["nodes (total)"].split()[3])
+    entry["gap"] = 100.0 if stat_dict["Gap"].split()[2] == "infinite" else min(float(stat_dict["Gap"].split()[2]), 100.0)
+    if entry["gap"] > 100.0:
+        print(stat_dict)
+    entry["solved"] = 1 if entry["gap"] < 1e-4 else 0
+    if "signomial" not in stat_dict:
+        entry["affected"] = 0
     else:
+        entry["affected"] = 1 if int(stat_dict["signomial"].split()[13]) > 0 else 0
+
+    if stat_dict["Primal Bound"].split()[3] == "infeasible":
+        entry["feasible"] = False 
+        entry["primalbound"] = float("NAN")
+    else:
+        entry["feasible"] = True 
+        entry["primalbound"] = float("NAN") if stat_dict["Primal Bound"].split()[3] == "infinite" or stat_dict["Primal Bound"].split()[3] == "-" or stat_dict["Primal Bound"].split()[3] == "unbounded" else float(stat_dict["Primal Bound"].split()[3])
+    entry["dualbound"] = float("NAN") if stat_dict["Dual Bound"].split()[3] == "infinite" or stat_dict["Dual Bound"].split()[3] == "-" else float(stat_dict["Dual Bound"].split()[3])
+    return entry
+
+
+log_path = os.getcwd() + "/logs/All"
+logs = os.listdir(log_path)
+exclude = ["ann_fermentation_tanh", "t1000", "saa_2", "hadamard_9"]
+
+entries = []
+
+
+for log in logs:
+    log_ = log
+    log = log[0:-4]
+    setting = log.split("_")[-1]
+    instance = log.split(".")[0]
+    if instance in exclude:
         continue
+    entry={}
+    entry["instance"] = instance
+    entry["setting"] = setting
+    entry = extract_scip(entry, log_path + "/"+log_)
+    entries.append(entry)
+
+entries.sort(key=lambda x: x.get("instance") + x.get("setting"))
+
+iscomp = False
+instances = set()
+for entry in entries:
+    instance = entry["instance"]
+    instances.add(instance)
+    print(entry)
+    if iscomp:
+        row = prb_rows[instance]
+        #print(instance, " ", row["name"])
+        if row["name"] == instance:
+            if row["primalbound"] != "nan" and not entry["feasible"]:
+                print(entry, " 1 ", row["primalbound"], " ", row["dualbound"])
+            elif entry["dualbound"] > row["primalbound"] + 1e-2:
+                print(entry, " 2 ", row["primalbound"], " ", row["dualbound"])
+            elif entry["instance"] == "hda":
+                print(entry, " 3 ", row["primalbound"], " ", row["dualbound"])
+
+alls = set()
+affecteds = set()
+affecteds_core = set()
+for entry in entries:
+    if entry["affected"] == 1:
+        affecteds.add(entry["instance"])
+        for entry_ in entries:
+            if entry_["instance"] == entry["instance"] and entry_["setting"] == "disablesig" and entry_["total_time"] > 500:
+                affecteds_core.add(entry_["instance"])
+    else:
+        alls.add(entry["instance"])
+maps = [alls, affecteds, affecteds_core]
+
+print(len(alls), " ", len(affecteds), " ", len(affecteds_core))
 
 
+
+display_keys = ["setting", "solved", "affected", "nodes", "total_time", "gap"]
+total_keys = ["solved"]
+avg_keys = ["nodes", "total_time", "gap"]
+avg_bias = {"gap": 1.0, "nodes": 100.0, "total_time": 1.0}
+
+
+def classdata():
+    return {"total": 0, "solved": 0,  "affected": 0, "gap":[0.0, []], "nodes":[0.0, []], "total_time":[0.0, []]} 
+
+def checklst(lst):
+    for ele in lst:
+        if ele > 101.0:
+            return False
+    return True
 
 def SGM(lst, total, bias):
     return np.exp(np.sum([np.log(ele + bias) for ele in lst ]) / total) - bias
 
-def Stat(name):
-    return {"setting": name, "solved": 0, "closed": 0, "closed_lst": [], "ncuts": 0, "ncuts_lst" : [], "total_time": 0.0, "total": 0} 
+def isinsclass(sclass, entry):
+    if sclass[0] - 1e-3 <= entry["total_time"] and sclass[1] + 1e-3 > entry["total_time"] and  entry["instance"] in maps[sclass[2]]:
+        return True
+    else:
+        return False
 
 
+class Stat:
+    def __init__(self, setting, sclasses):
+        self.sclassdata = {}
+        self.setting = setting
+        self.sclasses = sclasses
+        for sclass in sclasses:
+            self.sclassdata[sclass] = classdata()
 
+    def add_entry(self, entry):
+        #print(entry)
+        for sclass in self.sclasses:
+            if isinsclass(sclass, entry):
+                self.sclassdata[sclass]["total"] += 1
+                self.sclassdata[sclass]["solved"] += entry["solved"]
+                self.sclassdata[sclass]["affected"] += entry["affected"]
+                for avg_key in avg_keys:
+                    self.sclassdata[sclass][avg_key][1].append(entry[avg_key])    
+                #print(self.sclassdata[sclass])
 
-clogs = os.listdir(continuous_log_path)
-dlogs = os.listdir(discrete_log_path)
+    def avg(self):
+        for sclass in self.sclasses:
+            for avg_key in avg_keys:
+                self.sclassdata[sclass][avg_key][0] =  SGM(self.sclassdata[sclass][avg_key][1], self.sclassdata[sclass]["total"], avg_bias[avg_key])
+                #if avg_key == "gap":
+                #    print(len(self.sclassdata[sclass][avg_key][1]), self.sclassdata[sclass][avg_key][0])
+
+    def printdata(self):
+        print("data: ",self.setting," ", self.sclassdata[sclasses[2]])
+
+    def print(self, islatex = True):
+        printstr = str(self.setting) + " & "
+        if islatex:
+            for sclass in self.sclasses:
+                ltstring = [str(self.sclassdata[sclass][display_key]) + " & " for display_key in total_keys] + [ str(round(self.sclassdata[sclass][display_key][0],1)) + ("\%" if display_key == "gap"  else "") + " & " for display_key in avg_keys]
+                strs = ""
+                for lts in ltstring:
+                    strs += lts
+                printstr += strs
+        return printstr
+
+    def normprint(self, norm,  islatex = True):
+        printstr = str(self.setting)  + " & "
+        if islatex:
+            for sclass in self.sclasses:
+                ltstring = [str(self.sclassdata[sclass][display_key]) + " & " for display_key in total_keys] + [ str(round(self.sclassdata[sclass][display_key][0] / norm.sclassdata[sclass][display_key][0], 2)) +  ("" if display_key == "gap" else "") + " & " for display_key in avg_keys]
+                strs = ""
+                for lts in ltstring:
+                    strs += lts
+                printstr += strs
+        return printstr
 
 details = ""
+settings = ["disablesig", "sigestimate", "sigenfo", "sigestimateenfo"]
+stats = {}
 
-settings = ["default", "icuts", "supcuts", "lcpcuts"]
-
-banks = {"default": [], "icuts": [], "supcuts" : [], "lcpcuts": []}
-
-stats = {"default": Stat("default"), "icuts": Stat("icuts"), "supcuts": Stat("supcuts"), "lcpcuts": Stat("lcpcuts")}
-
-affectstats = {"default": Stat("default"), "icuts": Stat("icuts"), "supcuts": Stat("supcuts"), "lcpcuts": Stat("lcpcuts")}
+sclasses = [(0.0, 3600.0, 0), (0.0, 3600.0, 1), (0.0, 3600.0, 2)]
 
 
-dstats = {"default": Stat("default"), "icuts": Stat("icuts"), "supcuts": Stat("supcuts"), "lcpcuts": Stat("lcpcuts")}
-
-daffectstats = {"default": Stat("default"), "icuts": Stat("icuts"), "supcuts": Stat("supcuts"), "lcpcuts": Stat("lcpcuts")}
-
-allstats = {"default": Stat("default"), "icuts": Stat("icuts"), "supcuts": Stat("supcuts"), "lcpcuts": Stat("lcpcuts")}
-
-allaffectstats = {"default": Stat("default"), "icuts": Stat("icuts"), "supcuts": Stat("supcuts"), "lcpcuts": Stat("lcpcuts")}
+for setting in settings: 
+    stats[setting] = Stat(setting, sclasses)
 
 
-def add(stat, entry):
-    #print(stat, entry, entry["closed"] is float("nan"))
-    if math.isnan(entry["closed"]):
-        return
-    #print(entry)
-    stat["solved"] += entry["issolved"] 
-    stat["total"] += 1
-    stat["ncuts_lst"].append(entry["ncuts"])
-    stat["closed_lst"].append(entry["closed"])
-    stat["total_time"] += entry["total_time"] 
-
-def avgStat(stat):
-    stat["closed"] /=  stat["total"]
-    stat["total_time"] /= stat["total_time"]
-    stat["closed"] = SGM(stat["closed_lst"], stat["total"], 1)
-    stat["ncuts"] = SGM(stat["ncuts_lst"], stat["total"], 1)
-
-#nolp = ["saa_2","truck", "fct", "transswitch2736spr", "blendgap"]
-nolp = []
-
-for log in clogs:
-    instance = log.split(".nl")[0]
-    setting =  log.split("_")[-1].strip()[0:-4] 
-    entry={}
-    entry["instance"] = instance
-    entry["setting"] = setting
-    entry["iscontinuous"] = True
-    entry = extract_scip(entry, continuous_log_path + "/"+log)
-    banks[setting].append(entry)
-    if entry["setting"] == "default" and entry["noLP"]:
-        nolp.append(entry["instance"])
-    #print(entry)
-
-for log in dlogs:
-    instance = log.split(".nl")[0]
-    setting =  log.split("_")[-1].strip()[0:-4] 
-    entry={}
-    entry["instance"] = instance
-    entry["setting"] = setting
-    entry["iscontinuous"] = False
-    entry = extract_scip(entry, discrete_log_path + "/"+log)
-    banks[setting].append(entry)
-    if entry["setting"] == "default" and entry["noLP"]:
-        nolp.append(entry["instance"])
-    #print(entry)
+for entry in entries:
+    for setting in settings: 
+        if entry["setting"] == setting:
+            stats[setting].add_entry(entry)
 
 
-print(nolp)
+for instance in instances:
+    ins_entries = []
+    for setting in settings: 
+        for entry in entries:
+            if entry["instance"] == instance and entry["setting"] == setting:
+                ins_entries.append(entry)
 
 
-def parse_name(name):
-    s = ""
-    for c in name:
-        if c == "_":
-            s += "\_"
-        else:
-            s +=c
-    return s
-fullaffect  = []
-for ind, rows in enumerate([continuous_rows, discrete_rows]):
-    for row in rows:
-        instance = row["name"]
-        if instance in nolp:
-            continue
-        primal = row["primalbound"]    
-        dual = row["dualbound"]
-        #print(instance, primal, dual)
-        defaultdual =  float("NAN")
-        nodual  = 0 
-        for entry in banks["default"]:
-            if entry["instance"] == instance:
-                defaultdual = entry["FirstLP"]
-        if defaultdual ==  float("NAN"):
-            nolp.append(entry["instance"])
-            continue
-        for setting in settings:
-            for entry in banks[setting]:
-                if entry["instance"] == instance and entry["dualbound"] == float("NAN"):
-                    nodual += 1
-                    continue
-        if nodual == 3:
-            nolp.append(entry["instance"])
-            continue
-        isaffteced = 0
-        for setting in settings:
-            if setting == "default":
-                continue
-            for entry in banks[setting]:
-                if entry["instance"] == instance and entry["affected"]:
-                    isaffteced += 1
-                    break
-        numadded = 0
-        tmp_detail = str(parse_name(row["name"])) +  " & " +  ("\\textbf{C}"if ind == 0 else "\\textbf{MI}") + " & " +  str(row["nsignomfunc"]) + " & " + str(row["npolynomfunc"])
-        for setting in settings:
-            for entry in banks[setting]:
-                if entry["instance"] == instance:
-                    #if  setting == "default":
-                    #    closed = 0
-                    #elif abs(primal - defaultdual ) < 1e-9:
-                    #    closed = 100
-                    #else:
-                    if instance == "gear4":
-                        print(setting, instance)
-                    if abs(primal - defaultdual ) < 1e-6:
-                        closed = 1
-                    else:
-                        closed = (entry["dualbound"] - defaultdual) / (primal - defaultdual ) 
-                        if closed > 1:
-                            #detail += " & " + str(entry["solving"]) + " & " + str(float("NAN")) + " & " + str(entry["sepa_signomial"])
-                            continue
-                    if instance == "gear4":
-                        print(setting, instance)
-                    entry["closed"] =   min(closed, 1)
-                    entry["issolved"] = 1 if  entry["rel_gap"] < 1e-4  else 0
-                    #print(entry["setting"], closed, defaultdual, entry["dualbound"], primal)# entry["dualbound"])
-                    #if dstats[setting]["closed"] is float("NAN"):
-                    #print(instance, dstats[setting])
-                    #detail += " & " + str(round(entry["solving"], 1)) + " & " + str(round(entry["closed"],1)) + " & " + str(entry["sepa_signomial"])
-                    tmp_detail += " & " + str(round(entry["solving"], 1)) + " & " + str(round(entry["closed"],2)) + " & " + str(entry["ncuts"])
-                    #if instance == "gear4":
-                    #    print(setting, entry, str(round(entry["solving"], 1)) + " & " + str(round(entry["closed"],1)) + " & " + str(entry["sepa_signomial"]))
-                    add(allstats[setting], entry)
-                    if isaffteced > 0:
-                        numadded+=1
-                        add(allaffectstats[setting], entry)
-                    if entry["iscontinuous"]:
-                        add(stats[setting], entry)
-                        if isaffteced > 0:
-                            add(affectstats[setting], entry)
-                        break
-                    else:
-                        add(dstats[setting], entry)
-                        if isaffteced > 0:
-                            add(daffectstats[setting], entry)
-                        break   
-        #print(instance, " ", tmp_detail)
-        details += tmp_detail + "\\\\" + "\n"   
-        isfullaffect = isaffteced == 3 and numadded == 4
-        if isfullaffect:
-            fullaffect.append(instance)
-
-file = open("details.txt", "w")
-file.write(details)
-file.close()
-#print(details)
-printrow1 = ""
-#print(stats)
 for setting in settings:
-    avgStat(stats[setting])
-    #print(stats[setting], affectstats[setting])
-    printrow1 += str(stats[setting]["solved"]) + "/" + str(stats[setting]["total"]) + "&" + str(round(stats[setting]["closed"],2)) + "&" 
-    printrow1 +=  (str(round(stats[setting]["closed"]/stats["default"]["closed"],2)) + "&" + str(round(stats[setting]["ncuts"],0)) + "&" ) if setting != "default" else ""  
+    stats[setting].avg()
+    stats[setting].printdata()
+    printstr = stats[setting].print()
+    printstrn = stats[setting].normprint(stats["disablesig"])
+    print(printstr, "\n", printstrn)
 
-print(printrow1)
-
-
-printrow2 = ""
-for setting in settings:
-    avgStat(affectstats[setting])
-    printrow2 += str(affectstats[setting]["solved"]) + "/" + str(affectstats[setting]["total"]) + "&" + str(round(affectstats[setting]["closed"],2)) + "&" 
-    printrow2 +=  (str(round(affectstats[setting]["closed"]/affectstats["default"]["closed"],2)) + "&" + str(round(affectstats[setting]["ncuts"],0)) + "&") if setting != "default" else ""  
-
-print(printrow2)
-
-#print(dstats, daffectstats)
-printrow1 = ""
-#print(dstats)
-for setting in settings:
-    avgStat(dstats[setting])
-    printrow1 += str(dstats[setting]["solved"]) + "/" + str(dstats[setting]["total"]) + "&" + str(round(dstats[setting]["closed"],2)) + "&"  
-    printrow1 +=  (str(round(dstats[setting]["closed"]/dstats["default"]["closed"],2)) + "&"  + str(round(dstats[setting]["ncuts"],0)) + "&") if setting != "default" else ""
-
-
-print(printrow1)
-
-
-printrow2 = ""
-for setting in settings:
-    avgStat(daffectstats[setting])
-    printrow2 += str(daffectstats[setting]["solved"]) + "/" + str(daffectstats[setting]["total"]) + "&" + str(round(daffectstats[setting]["closed"],2)) + "&"  
-    printrow2 +=  (str(round(daffectstats[setting]["closed"]/daffectstats["default"]["closed"],2)) + "&" + str(round(daffectstats[setting]["ncuts"],0)) + "&") if setting != "default" else "" 
-
-print(printrow2)
-
-
-printrow1 = ""
-#print(dstats)
-for setting in settings:
-    avgStat(allstats[setting])
-    printrow1 += str(allstats[setting]["solved"]) + "/" + str(allstats[setting]["total"]) + "&" + str(round(allstats[setting]["closed"],2)) + "&"  
-    printrow1 +=  (str(round(allstats[setting]["closed"]/allstats["default"]["closed"],2)) + "&" + str(round(allstats[setting]["ncuts"],0)) + "&") if setting != "default" else ""
-
-
-print(printrow1)
-
-
-printrow2 = ""
-for setting in settings:
-    avgStat(allaffectstats[setting])
-    printrow2 += str(allaffectstats[setting]["solved"]) + "/" + str(allaffectstats[setting]["total"]) + "&" + str(round(allaffectstats[setting]["closed"],2)) + "&" 
-    printrow2 +=  (str(round(allaffectstats[setting]["closed"]/allaffectstats["default"]["closed"],2)) + "&" +  str(round(allaffectstats[setting]["ncuts"],0)) + "&") if setting != "default" else ""
-
-print(printrow2)
-
-
-data=  {"default": [], "icuts": [], "supcuts": [], "lcpcuts": []}
-for instance in fullaffect:
-    for setting in settings:
-        for entry in banks[setting]:
-            if entry["instance"] == instance:
-                data[setting].append(entry["closed"])
-
-
-fig, axes = plt.subplots(nrows=3, ncols=2, figsize=(10, 9))  # define the figure and subplots
-
-
-axes[0,0].scatter(data["default"], data["icuts"], color = 'blue', marker = '+')
-axes[0,0].plot(data["default"], data["default"], color = 'green')
-axes[0,0].set_xlabel('Default')
-axes[0,0].set_ylabel('ICUT')
-
-
-axes[0,1].scatter(data["default"], data["supcuts"], color = 'blue', marker = '+')
-axes[0,1].plot(data["default"], data["default"], color = 'green')
-axes[0,1].set_xlabel('Default')
-axes[0,1].set_ylabel('SOCUT')
-
-axes[1,0].scatter(data["default"], data["lcpcuts"], color = 'blue', marker = '+')
-axes[1,0].plot(data["default"], data["default"], color = 'green')
-axes[1,0].set_xlabel('Default')
-axes[1,0].set_ylabel('POCUT')
-
-axes[1,1].scatter(data["icuts"], data["supcuts"], color = 'blue', marker = '+')
-axes[1,1].plot(data["icuts"], data["icuts"], color = 'green')
-axes[1,1].set_xlabel('ICUT')
-axes[1,1].set_ylabel('SOCUT')
-
-
-axes[2,0].scatter(data["icuts"], data["lcpcuts"], color = 'blue', marker = '+')
-axes[2,0].plot(data["icuts"], data["icuts"], color = 'green')
-axes[2,0].set_xlabel('ICUT')
-axes[2,0].set_ylabel('POCUT')
-
-axes[2,1].scatter(data["supcuts"], data["lcpcuts"], color = 'blue', marker = '+')
-axes[2,1].plot(data["supcuts"], data["supcuts"], color = 'green')
-axes[2,1].set_xlabel('SOCUT')
-axes[2,1].set_ylabel('POCUT')
-
-
-
-
-
-
-fig.tight_layout()
-plt.savefig('scatter.pdf') 

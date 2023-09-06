@@ -1,9 +1,9 @@
-SCIP Status        : solving was interrupted [node limit reached]
-Total Time         :      58.63
-  solving          :      58.52
-  presolving       :       0.42 (included in solving)
-  reading          :       0.11
-  copying          :       0.01 (1 #copies) (minimal 0.01, maximal 0.01, average 0.01)
+SCIP Status        : solving was interrupted [time limit reached]
+Total Time         :    3600.02
+  solving          :    3600.00
+  presolving       :       0.17 (included in solving)
+  reading          :       0.02
+  copying          :       0.15 (15 #copies) (minimal 0.01, maximal 0.01, average 0.01)
 Original Problem   :
   Problem name     : rocket400
   Variables        : 2407 (0 binary, 0 integer, 0 implicit integer, 2407 continuous)
@@ -11,10 +11,10 @@ Original Problem   :
   Objective        : minimize, 1 non-zeros (abs.min = 1, abs.max = 1)
 Presolved Problem  :
   Problem name     : t_rocket400
-  Variables        : 8402 (0 binary, 0 integer, 0 implicit integer, 8402 continuous)
+  Variables        : 8400 (0 binary, 0 integer, 0 implicit integer, 8400 continuous)
   Constraints      : 2000 initial, 2000 maximal
   Objective        : minimize, 1 non-zeros (abs.min = 1, abs.max = 1)
-  Nonzeros         : 10392 constraint, 0 clique table
+  Nonzeros         : 10391 constraint, 0 clique table
 Presolvers         :   ExecTime  SetupTime  Calls  FixedVars   AggrVars   ChgTypes  ChgBounds   AddHoles    DelCons    AddCons   ChgSides   ChgCoefs
   boundshift       :       0.00       0.00      0          0          0          0          0          0          0          0          0          0
   convertinttobin  :       0.00       0.00      0          0          0          0          0          0          0          0          0          0
@@ -30,55 +30,55 @@ Presolvers         :   ExecTime  SetupTime  Calls  FixedVars   AggrVars   ChgTyp
   redvub           :       0.00       0.00      0          0          0          0          0          0          0          0          0          0
   sparsify         :       0.00       0.00      1          0          0          0          0          0          0          0          0          0
   stuffing         :       0.00       0.00      0          0          0          0          0          0          0          0          0          0
-  trivial          :       0.00       0.00      2          5          0          0          0          0          0          0          0          0
+  trivial          :       0.00       0.00      3          5          0          0          0          0          0          0          0          0
   tworowbnd        :       0.00       0.00      0          0          0          0          0          0          0          0          0          0
-  dualfix          :       0.00       0.00      2          0          0          0          0          0          0          0          0          0
+  dualfix          :       0.00       0.00      3          0          0          0          0          0          0          0          0          0
   genvbounds       :       0.00       0.00      0          0          0          0          0          0          0          0          0          0
   probing          :       0.00       0.00      0          0          0          0          0          0          0          0          0          0
   pseudoobj        :       0.00       0.00      0          0          0          0          0          0          0          0          0          0
-  symmetry         :       0.03       0.00      1          0          0          0          0          0          0          0          0          0
+  symmetry         :       0.01       0.00      1          0          0          0          0          0          0          0          0          0
   vbounds          :       0.00       0.00      0          0          0          0          0          0          0          0          0          0
-  linear           :       0.00       0.00      1          0          0          0          0          0          1          0          0          0
-  nonlinear        :       0.37       0.09      4          0          0          0        403          0          1          0          0          0
+  linear           :       0.00       0.00      1          1          0          0          0          0          1          0          0          0
+  nonlinear        :       0.15       0.04      5          0          0          0        403          0          1          0          0          0
   benders          :       0.00       0.00      0          0          0          0          0          0          0          0          0          0
   components       :       0.00       0.00      1          0          0          0          0          0          0          0          0          0
-  root node        :          -          -      -          0          -          -       4001          -          -          -          -          -
+  root node        :          -          -      -          0          -          -       7202          -          -          -          -          -
 Constraints        :     Number  MaxNumber  #Separate #Propagate    #EnfoLP    #EnfoRelax  #EnfoPS    #Check   #ResProp    Cutoffs    DomReds       Cuts    Applied      Conss   Children
-  benderslp        :          0          0          0          0         12          0          0          9          0          0          0          0          0          0          0
-  integral         :          0          0          0          0         12          0          0          9          0          0          0          0          0          0          0
-  nonlinear        :       2000       2000          0          3         12          0          0          5          0          0          0       4205       4205          0          2
-  benders          :          0          0          0          0          0          0          0          2          0          0          0          0          0          0          0
-  countsols        :          0          0          0          0          0          0          0          2          0          0          0          0          0          0          0
+  benderslp        :          0          0          0          0      10427          0      93636          9          0          0          0          0          0          0          0
+  integral         :          0          0          0          0      10427          0          0          9          0          0          0          0          0          0          0
+  nonlinear        :       2000       2000         11     406545      10427          0      93636          5          0      69639   58594093    1144846    1142150          0        460
+  benders          :          0          0          0          0          0          0      93636          2          0          0          0          0          0          0          0
+  countsols        :          0          0          0          0          0          0      93636          2          0          0          0          0          0          0          0
   components       :          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0
 Constraint Timings :  TotalTime  SetupTime   Separate  Propagate     EnfoLP     EnfoPS     EnfoRelax   Check    ResProp    SB-Prop
-  benderslp        :       0.00       0.00       0.00       0.00       0.00       0.00       0.00       0.00       0.00       0.00
-  integral         :       0.01       0.00       0.00       0.00       0.01       0.00       0.00       0.00       0.00       0.00
-  nonlinear        :       0.30       0.09       0.07       0.01       0.11       0.00       0.00       0.02       0.00       0.00
-  benders          :       0.00       0.00       0.00       0.00       0.00       0.00       0.00       0.00       0.00       0.00
-  countsols        :       0.00       0.00       0.00       0.00       0.00       0.00       0.00       0.00       0.00       0.00
-  components       :       0.00       0.00       0.00       0.00       0.00       0.00       0.00       0.00       0.00       0.00
+  benderslp        :       0.05       0.00       0.00       0.00       0.00       0.05       0.00       0.00       0.00       0.00
+  integral         :       1.21       0.00       0.00       0.00       1.21       0.00       0.00       0.00       0.00       0.00
+  nonlinear        :    1275.36       0.04       0.05    1046.63      39.40     189.24       0.00       0.01       0.00       0.00
+  benders          :       0.03       0.00       0.00       0.00       0.00       0.03       0.00       0.00       0.00       0.00
+  countsols        :       0.03       0.00       0.00       0.00       0.00       0.03       0.00       0.00       0.00       0.00
+  components       :       0.04       0.00       0.00       0.04       0.00       0.00       0.00       0.00       0.00       0.00
 Propagators        : #Propagate   #ResProp    Cutoffs    DomReds
   dualfix          :          3          0          0          0
-  genvbounds       :         15          0          0          0
+  genvbounds       :      18830          0          0      95354
   nlobbt           :          0          0          0          0
   obbt             :         13          0          0          1
   probing          :          0          0          0          0
-  pseudoobj        :          0          0          0          0
+  pseudoobj        :     405828          0          0          0
   redcost          :          0          0          0          0
   rootredcost      :          0          0          0          0
   symmetry         :          0          0          0          0
   vbounds          :          0          0          0          0
 Propagator Timings :  TotalTime  SetupTime   Presolve  Propagate    ResProp    SB-Prop
   dualfix          :       0.00       0.00       0.00       0.00       0.00       0.00
-  genvbounds       :       0.00       0.00       0.00       0.00       0.00       0.00
+  genvbounds       :       0.41       0.00       0.00       0.41       0.00       0.00
   nlobbt           :       0.00       0.00       0.00       0.00       0.00       0.00
-  obbt             :      38.21       0.00       0.00      38.21       0.00       0.00
+  obbt             :      26.98       0.00       0.00      26.98       0.00       0.00
   probing          :       0.00       0.00       0.00       0.00       0.00       0.00
-  pseudoobj        :       0.00       0.00       0.00       0.00       0.00       0.00
+  pseudoobj        :       0.25       0.00       0.00       0.25       0.00       0.00
   redcost          :       0.00       0.00       0.00       0.00       0.00       0.00
-  rootredcost      :       0.00       0.00       0.00       0.00       0.00       0.00
-  symmetry         :       0.03       0.00       0.03       0.00       0.00       0.00
-  vbounds          :       0.00       0.00       0.00       0.00       0.00       0.00
+  rootredcost      :       0.08       0.00       0.00       0.08       0.00       0.00
+  symmetry         :       0.07       0.00       0.01       0.07       0.00       0.00
+  vbounds          :       0.14       0.00       0.00       0.14       0.00       0.00
 Conflict Analysis  :       Time      Calls    Success    DomReds  Conflicts   Literals    Reconvs ReconvLits   Dualrays   Nonzeros   LP Iters   (pool size: [--,--])
   propagation      :       0.00          0          0          -          0        0.0          0        0.0          -          -          -
   infeasible LP    :       0.00          0          0          -          0        0.0          0        0.0          0        0.0          0
@@ -87,35 +87,34 @@ Conflict Analysis  :       Time      Calls    Success    DomReds  Conflicts   Li
   pseudo solution  :       0.00          0          0          -          0        0.0          0        0.0          -          -          -
   applied globally :       0.00          -          -          0          0        0.0          -          -          0          -          -
   applied locally  :          -          -          -          0          0        0.0          -          -          0          -          -
-Separators         :   ExecTime  SetupTime      Calls    Cutoffs    DomReds       Cuts    Applied      Conss
-  cut pool         :       0.00                     0          -          -          0          -          -    (maximal pool size: 0)
-  aggregation      :       0.00       0.00          0          0          0          0          0          0
-  > cmir           :          -          -          -          -          -          -          0          -
-  > flowcover      :          -          -          -          -          -          -          0          -
-  > knapsackcover  :          -          -          -          -          -          -          0          -
-  cgmip            :       0.00       0.00          0          0          0          0          0          0
-  clique           :       0.00       0.00          0          0          0          0          0          0
-  closecuts        :       0.00       0.00          0          0          0          0          0          0
-  convexproj       :       0.00       0.00          0          0          0          0          0          0
-  disjunctive      :       0.00       0.00          0          0          0          0          0          0
-  eccuts           :       0.00       0.00          0          0          0          0          0          0
-  gauge            :       0.00       0.00          0          0          0          0          0          0
-  gomory           :       0.00       0.00          0          0          0          0          0          0
-  > gomorymi       :          -          -          -          -          -          -          0          -
-  > strongcg       :          -          -          -          -          -          -          0          -
-  impliedbounds    :       0.00       0.00          0          0          0          0          0          0
-  interminor       :       0.00       0.00          0          0          0          0          0          0
-  intobj           :       0.00       0.00          0          0          0          0          0          0
-  mcf              :       0.00       0.00          0          0          0          0          0          0
-  minor            :       0.00       0.00          0          0          0          0          0          0
-  mixing           :       0.00       0.00          0          0          0          0          0          0
-  oddcycle         :       0.00       0.00          0          0          0          0          0          0
-  rapidlearning    :       0.00       0.00          0          0          0          0          0          0
-  rlt              :       0.00       0.00          0          0          0          0          0          0
-  sepa_signomial   :       0.00       0.00          0          0          0          0          0          0
-  zerohalf         :       0.00       0.00          0          0          0          0          0          0
-Cutselectors       :   ExecTime  SetupTime
-  hybrid           :       0.00       0.00
+Separators         :   ExecTime  SetupTime      Calls  RootCalls    Cutoffs    DomReds  FoundCuts ViaPoolAdd  DirectAdd    Applied ViaPoolApp  DirectApp      Conss
+  cut pool         :       0.00          -          0          0          -          -          0          0          -          -          -          -          -    (maximal pool size:          0)
+  aggregation      :       0.00       0.00          0          0          0          0          0          0          0          0          0          0          0
+  > cmir           :          -          -          -          -          -          -          -          0          0          0          0          0          -
+  > flowcover      :          -          -          -          -          -          -          -          0          0          0          0          0          -
+  > knapsackcover  :          -          -          -          -          -          -          -          0          0          0          0          0          -
+  cgmip            :       0.00       0.00          0          0          0          0          0          0          0          0          0          0          0
+  clique           :       0.00       0.00          0          0          0          0          0          0          0          0          0          0          0
+  closecuts        :       0.00       0.00          0          0          0          0          0          0          0          0          0          0          0
+  convexproj       :       0.00       0.00          0          0          0          0          0          0          0          0          0          0          0
+  disjunctive      :       0.00       0.00          0          0          0          0          0          0          0          0          0          0          0
+  eccuts           :       0.00       0.00          0          0          0          0          0          0          0          0          0          0          0
+  gauge            :       0.00       0.00          0          0          0          0          0          0          0          0          0          0          0
+  gomory           :       0.00       0.00          0          0          0          0          0          0          0          0          0          0          0
+  > gomorymi       :          -          -          -          -          -          -          -          0          0          0          0          0          -
+  > strongcg       :          -          -          -          -          -          -          -          0          0          0          0          0          -
+  impliedbounds    :       0.00       0.00          0          0          0          0          0          0          0          0          0          0          0
+  interminor       :       0.00       0.00          0          0          0          0          0          0          0          0          0          0          0
+  intobj           :       0.00       0.00          0          0          0          0          0          0          0          0          0          0          0
+  mcf              :       0.00       0.00          0          0          0          0          0          0          0          0          0          0          0
+  minor            :       0.00       0.00          0          0          0          0          0          0          0          0          0          0          0
+  mixing           :       0.00       0.00          0          0          0          0          0          0          0          0          0          0          0
+  oddcycle         :       0.00       0.00          0          0          0          0          0          0          0          0          0          0          0
+  rapidlearning    :       0.00       0.00          0          0          0          0          0          0          0          0          0          0          0
+  rlt              :       0.00       0.00          0          0          0          0          0          0          0          0          0          0          0
+  zerohalf         :       0.00       0.00          0          0          0          0          0          0          0          0          0          0          0
+Cutselectors       :   ExecTime  SetupTime      Calls  RootCalls   Selected     Forced   Filtered  RootSelec   RootForc   RootFilt 
+  hybrid           :       0.01       0.00         11          0       1100          0       2696          0          0          0
 Pricers            :   ExecTime  SetupTime      Calls       Vars
   problem variables:       0.00          -          0          0
 Branching Rules    :   ExecTime  SetupTime   BranchLP  BranchExt   BranchPS    Cutoffs    DomReds       Cuts      Conss   Children
@@ -129,7 +128,7 @@ Branching Rules    :   ExecTime  SetupTime   BranchLP  BranchExt   BranchPS    C
   mostinf          :       0.00       0.00          0          0          0          0          0          0          0          0
   multaggr         :       0.00       0.00          0          0          0          0          0          0          0          0
   nodereopt        :       0.00       0.00          0          0          0          0          0          0          0          0
-  pscost           :       0.00       0.00          0          0          0          0          0          0          0          0
+  pscost           :      19.56       0.00          0      93636          0          0          0          0          0     187272
   random           :       0.00       0.00          0          0          0          0          0          0          0          0
   relpscost        :       0.00       0.00          0          0          0          0          0          0          0          0
   vanillafullstrong:       0.00       0.00          0          0          0          0          0          0          0          0
@@ -140,13 +139,13 @@ Primal Heuristics  :   ExecTime  SetupTime      Calls      Found       Best
   strong branching :       0.00          -          -          0          0
   actconsdiving    :       0.00       0.00          0          0          0
   adaptivediving   :       0.00       0.00          0          0          0
-  alns             :       0.02       0.00          1          0          0
+  alns             :       0.23       0.00         15          0          0
   bound            :       0.00       0.00          0          0          0
   clique           :       0.00       0.00          0          0          0
   coefdiving       :       0.00       0.00          0          0          0
   completesol      :       0.00       0.00          0          0          0
   conflictdiving   :       0.00       0.00          0          0          0
-  crossover        :       0.00       0.00          0          0          0
+  crossover        :       0.09       0.00          0          0          0
   dins             :       0.00       0.00          0          0          0
   distributiondivin:       0.00       0.00          0          0          0
   dps              :       0.00       0.00          0          0          0
@@ -155,153 +154,113 @@ Primal Heuristics  :   ExecTime  SetupTime      Calls      Found       Best
   feaspump         :       0.00       0.00          0          0          0
   fixandinfer      :       0.00       0.00          0          0          0
   fracdiving       :       0.00       0.00          0          0          0
-  gins             :       0.00       0.00          0          0          0
+  gins             :       0.01       0.00          0          0          0
   guideddiving     :       0.00       0.00          0          0          0
   indicator        :       0.00       0.00          0          0          0
+  indicatordiving  :       0.00       0.00          0          0          0
   intdiving        :       0.00       0.00          0          0          0
   intshifting      :       0.00       0.00          0          0          0
   linesearchdiving :       0.00       0.00          0          0          0
   localbranching   :       0.00       0.00          0          0          0
   locks            :       0.00       0.00          0          0          0
-  lpface           :       0.00       0.00          0          0          0
-  mpec             :       0.00       0.00          0          0          0
-  multistart       :       5.91       0.00          1          0          0
+  lpface           :       0.02       0.00          0          0          0
+  mpec             :       0.05       0.00          0          0          0
+  multistart       :       4.10       0.00          1          0          0
   mutation         :       0.00       0.00          0          0          0
   nlpdiving        :       0.00       0.00          0          0          0
   objpscostdiving  :       0.00       0.00          0          0          0
   octane           :       0.00       0.00          0          0          0
-  ofins            :       0.00       0.00          0          0          0
-  oneopt           :       0.00       0.00          0          0          0
+  ofins            :       0.04       0.00          0          0          0
+  oneopt           :       0.10       0.00          0          0          0
   padm             :       0.00       0.00          0          0          0
   proximity        :       0.00       0.00          0          0          0
   pscostdiving     :       0.00       0.00          0          0          0
   randrounding     :       0.00       0.00          0          0          0
-  rens             :       0.00       0.00          0          0          0
+  rens             :       0.02       0.00          0          0          0
   reoptsols        :       0.00       0.00          0          0          0
   repair           :       0.00       0.00          0          0          0
-  rins             :       0.00       0.00          0          0          0
+  rins             :       0.01       0.00          0          0          0
   rootsoldiving    :       0.00       0.00          0          0          0
   rounding         :       0.00       0.00          0          0          0
   shiftandpropagate:       0.00       0.00          0          0          0
   shifting         :       0.00       0.00          0          0          0
   simplerounding   :       0.00       0.00          0          0          0
-  subnlp           :      12.44       0.00          1          1          1
+  subnlp           :      14.31       0.00          1          1          1
   trivial          :       0.01       0.00          2          0          0
   trivialnegation  :       0.00       0.00          0          0          0
   trustregion      :       0.00       0.00          0          0          0
-  trysol           :       0.00       0.00          0          0          0
+  trysol           :       0.02       0.00          0          0          0
   twoopt           :       0.00       0.00          0          0          0
   undercover       :       0.00       0.00          0          0          0
   vbounds          :       0.00       0.00          0          0          0
   veclendiving     :       0.00       0.00          0          0          0
   zeroobj          :       0.00       0.00          0          0          0
-  zirounding       :       0.00       0.00          0          0          0
+  zirounding       :       0.02       0.00          0          0          0
   other solutions  :          -          -          -          0          -
-Diving (single)    :      Calls      Nodes   LP Iters Backtracks  Conflicts   MinDepth   MaxDepth   AvgDepth  RoundSols  NLeafSols  MinSolDpt  MaxSolDpt  AvgSolDpt
-  actconsdiving    :          0          -          -          -          -          -          -          -          -          -          -          -          -
-  coefdiving       :          0          -          -          -          -          -          -          -          -          -          -          -          -
-  conflictdiving   :          0          -          -          -          -          -          -          -          -          -          -          -          -
-  distributiondivin:          0          -          -          -          -          -          -          -          -          -          -          -          -
-  farkasdiving     :          0          -          -          -          -          -          -          -          -          -          -          -          -
-  fracdiving       :          0          -          -          -          -          -          -          -          -          -          -          -          -
-  guideddiving     :          0          -          -          -          -          -          -          -          -          -          -          -          -
-  linesearchdiving :          0          -          -          -          -          -          -          -          -          -          -          -          -
-  pscostdiving     :          0          -          -          -          -          -          -          -          -          -          -          -          -
-  veclendiving     :          0          -          -          -          -          -          -          -          -          -          -          -          -
-Diving (adaptive)  :      Calls      Nodes   LP Iters Backtracks  Conflicts   MinDepth   MaxDepth   AvgDepth  RoundSols  NLeafSols  MinSolDpt  MaxSolDpt  AvgSolDpt
-  actconsdiving    :          0          -          -          -          -          -          -          -          -          -          -          -          -
-  coefdiving       :          0          -          -          -          -          -          -          -          -          -          -          -          -
-  conflictdiving   :          0          -          -          -          -          -          -          -          -          -          -          -          -
-  distributiondivin:          0          -          -          -          -          -          -          -          -          -          -          -          -
-  farkasdiving     :          0          -          -          -          -          -          -          -          -          -          -          -          -
-  fracdiving       :          0          -          -          -          -          -          -          -          -          -          -          -          -
-  guideddiving     :          0          -          -          -          -          -          -          -          -          -          -          -          -
-  linesearchdiving :          0          -          -          -          -          -          -          -          -          -          -          -          -
-  pscostdiving     :          0          -          -          -          -          -          -          -          -          -          -          -          -
-  veclendiving     :          0          -          -          -          -          -          -          -          -          -          -          -          -
-Neighborhoods      :      Calls  SetupTime  SolveTime SolveNodes       Sols       Best       Exp3  EpsGreedy        UCB TgtFixRate  Opt  Inf Node Stal  Sol  Usr Othr Actv
-  zeroobjective    :          1       0.01       0.00          0          0          0    0.00000   -1.00000    0.03330      0.900    0    0    0    0    0    0    1    1
-  rens             :          0       0.00       0.00          0          0          0    0.00000   -1.00000    1.00000      0.900    0    0    0    0    0    0    0    0
-  rins             :          0       0.00       0.00          0          0          0    0.00000   -1.00000    1.00000      0.900    0    0    0    0    0    0    0    0
-  mutation         :          0       0.00       0.00          0          0          0    0.00000   -1.00000    1.00000      0.900    0    0    0    0    0    0    0    0
-  localbranching   :          0       0.00       0.00          0          0          0    0.00000   -1.00000    1.00000      0.900    0    0    0    0    0    0    0    0
-  crossover        :          0       0.00       0.00          0          0          0    0.00000   -1.00000    1.00000      0.900    0    0    0    0    0    0    0    0
-  proximity        :          0       0.00       0.00          0          0          0    0.00000   -1.00000    1.00000      0.900    0    0    0    0    0    0    0    0
-  dins             :          0       0.00       0.00          0          0          0    0.00000   -1.00000    1.00000      0.900    0    0    0    0    0    0    0    0
-  trustregion      :          0       0.00       0.00          0          0          0    0.00000   -1.00000    1.00000      0.900    0    0    0    0    0    0    0    0
 Expressions        :   #IntEval  IntEvalTi   #RevProp  RevPropTi    DomReds    Cutoffs  #Estimate  EstimTime  Branching  #Simplify SimplifyTi Simplified
-  exp              :       5600       0.00       1200       0.00          0          0          0       0.00          0       1201       0.00          1
-  pow              :      17984       0.00       3597       0.01          0          0       7062       0.00        462       7193       0.00       1203
-  prod             :      24394       0.00       3597       0.01          0          0      10377       0.01       5575      12402       0.00       5205
-  sum              :      23214       0.00       8011       0.00        402          0       2000       0.00          0      13616       0.03       6417
+  exp              :   14886894       1.30       1200       0.00          0          0          0       0.00          0       1201       0.00          1
+  pow              :   82116765      10.78       5110       0.00       1513          0    1190671       0.07     161851       7193       0.00       1203
+  prod             :  132749267      29.78   10851119       4.41    2861043       1225    3902692       0.12    3896324      12401       0.01       5206
+  sum              :   38226664       4.68   10003950       3.04     560509          0     119324       0.00          0      13617       0.02       6418
   val              :          0       0.00          0       0.00          0          0          0       0.00          0          0       0.00          0
-  var              :      21625       0.00          0       0.00          0          0          0       0.00          0      29992       0.00         13
+  var              :   92074836       2.76          0       0.00          0          0          0       0.00          0      29990       0.00         14
 Nlhdlrs            :    Detects  DetectAll DetectTime   #IntEval  IntEvalTi   #RevProp  RevPropTi    DomReds    Cutoffs   #Enforce   EnfoTime       Cuts  Branching
-  soc              :          0          0       0.01          0       0.00          0       0.00          0          0          0       0.00          0          0
-  convex           :        400        400       0.01          0       0.00          0       0.00          0          0        403       0.01          3          0
-  concave          :        400        400       0.03          0       0.00          0       0.00          0          0        400       0.00          0          0
+  soc              :          0          0       0.00          0       0.00          0       0.00          0          0          0       0.00          0          0
+  convex           :        400        400       0.00          0       0.00          0       0.00          0          0        483       0.00         83          0
+  concave          :        400        400       0.00          0       0.00          0       0.00          0          0        400       0.00          0          0
   quotient         :          0          0       0.00          0       0.00          0       0.00          0          0          0       0.00          0          0
-  quadratic        :       1199       5995       0.00      12390       0.03      11191       0.02          0          0          0       0.00          0          0
-  default          :       8802      34408       0.02      48799       0.00      23612       0.02        402          0      15839       0.08       4202          0
-  bilinear         :       1603       1603       0.00        402       0.00        401       0.00          0          0       5527       0.00          0          0
+  quadratic        :       1199       7194       0.01  165694431     165.85  153109832     325.69   45112694       4590          0       0.00          0          0
+  default          :       8800      40803       0.00  267953200      57.47   20868584      21.91    3423065       1225    5209088       3.43    1144763          0
+  bilinear         :       1602       1602       0.00   14976079       1.67     542249       0.06          0          0    3870164       0.42          0          0
   perspective      :          0          0       0.00          0       0.00          0       0.00          0          0          0       0.00          0          0
 LP                 :       Time      Calls Iterations  Iter/call   Iter/sec  Time-0-It Calls-0-It    ItLimit
-  primal LP        :       0.77         13       9721     810.08   12624.68       0.02          1
-  dual LP          :       0.32         12          0       0.00       0.00       0.32         12
+  primal LP        :     563.31      11601    2800462     265.02    4971.40       4.41       1034
+  dual LP          :    1541.65    1113287   40509874      96.76   26277.03     541.48     694636
   lex dual LP      :       0.00          0          0       0.00          -
   barrier LP       :       0.00          0          0       0.00          -       0.00          0
-  resolve instable :       0.00          0          0       0.00          -
-  diving/probing LP:      32.58       1369      77187      56.38    2369.15
+  resolve instable :     844.42     203391   33579811     165.10   39766.75
+  diving/probing LP:      23.44       1990      17854       8.97     761.75
   strong branching :       0.00          0          0       0.00          -          -          -          0
     (at root node) :          -          0          0       0.00          -
   conflict analysis:       0.00          0          0       0.00          -
-NLP                :       Time      Calls
-  all NLPs         :       0.00          0
+NLP relaxation     :
+  solve time       :       0.00 (0 calls)
+  convexity        :  nonconvex (0 linear rows, 0 convex ineq., 0 nonconvex ineq., 2000 nonlinear eq. or two-sided ineq.)
 NLP Solvers        :  #Problems  ProblemTi    #Solves  SolveTime      #Iter  Time/Iter      #Okay #TimeLimit #IterLimit #LObjLimit #Interrupt  #NumError #EvalError  #OutOfMem #LicenseEr #OtherTerm   #GlobOpt    #LocOpt  #Feasible #LocInfeas #GlobInfea #Unbounded   #Unknown
-  ipopt            :          2       0.00          1      12.49        113       0.11          1          0          0          0          0          0          0          0          0          0          0          1          0          0          0          0          0
+  ipopt            :          2       0.00          1      14.17         66       0.21          1          0          0          0          0          0          0          0          0          0          0          1          0          0          0          0          0
 B&B Tree           :
   number of runs   :          1
-  nodes            :          1 (1 internal, 0 leaves)
+  nodes            :     163506 (93866 internal, 69640 leaves)
   feasible leaves  :          0
-  infeas. leaves   :          0
+  infeas. leaves   :      69639
   objective leaves :          0
-  nodes (total)    :          1 (1 internal, 0 leaves)
-  nodes left       :          2
-  max depth        :          0
-  max depth (total):          0
-  backtracks       :          0 (0.0%)
+  nodes (total)    :     163506 (93866 internal, 69640 leaves)
+  nodes left       :      24228
+  max depth        :        221
+  max depth (total):        221
+  backtracks       :       4498 (2.8%)
   early backtracks :          0 (0.0%)
   nodes exc. ref.  :          0 (0.0%)
   delayed cutoffs  :          0
   repropagations   :          0 (0 domain reductions, 0 cutoffs)
-  avg switch length:       1.00
-  switching time   :       0.00
-Estim. Tree Size   :         -1
-Estimation Tree    : 3 nodes (1 visited, 1 internal, 0 leaves, 2 open), weight: 0.0000 completed 0.0000
-Estimations        :      estim      value      trend resolution     smooth
-  wbe              :         -1          -          -          -          -
-  tree-profile     :         -1          -          -          -          -
-  gap              :         -1    0.00000                     1           
-  tree-weight      :         -1    0.00000                     1           
-  leaf-frequency   :         -1   -0.50000                     1           
-  ssg              :         -1    1.00000                     1           
-  open-nodes       :         -1    2.00000                     1           
+  avg switch length:       2.37
+  switching time   :      28.95
 Root Node          :
   First LP value   :          -
-  First LP Iters   :       4335 (15482.14 Iter/sec)
-  First LP Time    :       0.28
+  First LP Iters   :       4327 (29199.79 Iter/sec)
+  First LP Time    :       0.15
   Final Dual Bound :          -
-  Final Root Iters :       9721
+  Final Root Iters :      10427
   Root LP Estimate :                     -
 Solution           :
   Solutions found  :          1 (1 improvements)
-  First Solution   : -1.01283660793959e+00   (in run 1, after 1 nodes, 46.57 seconds, depth 0, found by <subnlp>)
+  First Solution   : -1.01283660794104e+00   (in run 1, after 1 nodes, 41.66 seconds, depth 0, found by <subnlp>)
   Gap First Sol.   :   infinite
   Gap Last Sol.    :   infinite
-  Primal Bound     : -1.01283660793959e+00   (in run 1, after 1 nodes, 46.57 seconds, depth 0, found by <subnlp>)
-  Dual Bound       :          -
-  Gap              :   infinite
+  Primal Bound     : -1.01283660794104e+00   (in run 1, after 1 nodes, 41.66 seconds, depth 0, found by <subnlp>)
+  Dual Bound       : -1.82226341721461e+10
+  Gap              : 1799168200306.00 %
 Integrals          :      Total       Avg%
-  primal-dual      :    5852.00     100.00
+  primal-dual      :  360000.08     100.00
   primal-ref       :          -          - (not evaluated)
   dual-ref         :          -          - (not evaluated)
